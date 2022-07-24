@@ -10,8 +10,13 @@ class RecipesController < ApplicationController
     end
 
     def create
+        user = User.find_by(id: session[:user_id])
         recipe = Recipe.create(recipe_params)
-        render json: recipe, status: :created
+        if user.valid?
+            render json: recipe, status: :created
+        else
+            render json: {error: "could not create recipe"}, status: :unauthorized
+        end
     end
 
     private
